@@ -2,7 +2,9 @@
 
 namespace WebApplication1.Service;
 
-public interface ITeamMemberService
+public interface ITaskService
 {
     public TeamMemberWithTasksDto GetTeamMemberWithTasks(int teamMemberId);
+
+    public void DeleteProjectAndTasks(int projectId);
 }

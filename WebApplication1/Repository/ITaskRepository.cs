@@ -7,4 +7,6 @@ public interface ITaskRepository
     public List<Task> GetTasksWithProjectNamesAssignedToTeamMember(int teamMemberId);
     
     public List<Task> GetTasksWithProjectNamesCreatedByTeamMember(int teamMemberId);
+
+    public void DeleteProjectAndTasks(int projectId);
 }

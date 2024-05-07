@@ -3,12 +3,12 @@ using WebApplication1.Repository;
 
 namespace WebApplication1.Service;
 
-public class TeamMemberService : ITeamMemberService
+public class TaskService : ITaskService
 {
     private readonly ITeamMemberRepository _teamMemberRepository;
     private readonly ITaskRepository _taskRepository;
 
-    public TeamMemberService(ITeamMemberRepository teamMemberRepository, ITaskRepository taskRepository)
+    public TaskService(ITeamMemberRepository teamMemberRepository, ITaskRepository taskRepository)
     {
         _teamMemberRepository = teamMemberRepository;
         _taskRepository = taskRepository;
@@ -32,5 +32,10 @@ public class TeamMemberService : ITeamMemberService
         teamMemberWithTasksDto.CreatedTasks = tasksCreated;
 
         return teamMemberWithTasksDto;
+    }
+    
+    public void DeleteProjectAndTasks(int projectId)
+    {
+        _taskRepository.DeleteProjectAndTasks(projectId);
     }
 }

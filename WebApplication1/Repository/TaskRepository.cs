@@ -113,4 +113,51 @@ public class TaskRepository : ITaskRepository
 
         return tasks;
     }
+    
+    public void DeleteProjectAndTasks(int projectId)
+    {
+        using (var connection = new SqlConnection(_configuration["ConnectionStrings:DefaultConnection"]))
+        {
+            connection.Open();
+
+            using (var transaction = connection.BeginTransaction())
+            {
+                try
+                {
+                    DeleteTasksByProjectId(projectId, connection, transaction);
+
+                    DeleteProject(projectId, connection, transaction);
+
+                    transaction.Commit();
+                }
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                    throw new Exception("Error occurred while deleting project and tasks.", ex);
+                }
+            }
+        }
+    }
+
+    private void DeleteTasksByProjectId(int projectId, SqlConnection connection, SqlTransaction transaction)
+    {
+        using (var command = connection.CreateCommand())
+        {
+            command.Transaction = transaction;
+            command.CommandText = "DELETE FROM Task WHERE IdProject = @ProjectId";
+            command.Parameters.AddWithValue("@ProjectId", projectId);
+            command.ExecuteNonQuery();
+        }
+    }
+
+    private void DeleteProject(int projectId, SqlConnection connection, SqlTransaction transaction)
+    {
+        using (var command = connection.CreateCommand())
+        {
+            command.Transaction = transaction;
+            command.CommandText = "DELETE FROM Project WHERE IdProject = @ProjectId";
+            command.Parameters.AddWithValue("@ProjectId", projectId);
+            command.ExecuteNonQuery();
+        }
+    }
 }
